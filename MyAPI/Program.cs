@@ -1,4 +1,7 @@
 
+using Microsoft.EntityFrameworkCore;
+using MyAPI.Data;
+
 namespace MyAPI
 {
 	public class Program
@@ -8,8 +11,13 @@ namespace MyAPI
 			var builder = WebApplication.CreateBuilder(args);
 
 			// Add services to the container.
-
-			builder.Services.AddControllers().AddNewtonsoftJson();
+			builder.Services.AddDbContext<ApplicationDbContext>(option =>
+			{
+				option.UseSqlServer(builder.Configuration.GetConnectionString("MyConnection"));
+			});
+			builder.Services.AddControllers(options=> {
+				//options.ReturnHttpNotAcceptable = true;
+			}).AddNewtonsoftJson().AddXmlDataContractSerializerFormatters();
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
