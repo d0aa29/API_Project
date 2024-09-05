@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyAPI.Models.Dto
 {
-	public class VillaDTOcs
+	public class VillaDTO
     {
         public int Id { get; set; }
         [Required]
