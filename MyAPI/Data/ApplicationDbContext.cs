@@ -10,5 +10,6 @@ namespace MyAPI.Data
           : base(options) {
         }
         public DbSet<Villa> villas { get; set; }
+
     }
 }
