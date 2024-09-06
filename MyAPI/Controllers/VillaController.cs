@@ -51,32 +51,33 @@ namespace MyAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<VillaDTO> CrateViall([FromBody] VillaDTO villaDTOcs)
+        public ActionResult<VillaDTO> CrateViall([FromBody] VillaCreateDTO villaDTO)
         {
-            if (villaDTOcs == null)
+            if (villaDTO == null)
                 return BadRequest();
-            if (villaDTOcs.Id > 0)
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            if (_db.villas.FirstOrDefault(x => x.Name.ToLower() == villaDTOcs.Name.ToLower()) != null)
+            //if (villaDTO.Id > 0)
+            //    return StatusCode(StatusCodes.Status500InternalServerError);
+            if (_db.villas.FirstOrDefault(x => x.Name.ToLower() == villaDTO.Name.ToLower()) != null)
             {
                 ModelState.AddModelError("", "Vaill alredy exist");
                 return BadRequest(ModelState);
             }
             Villa model = new()
             {
-                Id = villaDTOcs.Id,
-                Name = villaDTOcs.Name,
-                Amenity = villaDTOcs.Amenity,
-                Details = villaDTOcs.Details,
-                ImageUrl = villaDTOcs.ImageUrl,
-                Occupancy = villaDTOcs.Occupancy,
-                Rate = villaDTOcs.Rate,
-                Sqft = villaDTOcs.Sqft
+                //Id = villaDTO.Id,
+                Name = villaDTO.Name,
+                Amenity = villaDTO.Amenity,
+                Details = villaDTO.Details,
+                ImageUrl = villaDTO.ImageUrl,
+                Occupancy = villaDTO.Occupancy,
+                Rate = villaDTO.Rate,
+                Sqft = villaDTO.Sqft
 
             };
             _db.villas.Add(model);
             _db.SaveChanges();
-            return Ok(villaDTOcs);
+            return CreatedAtRoute("GetViall", new { id = model.Id }, model);
+          
         }
         [HttpDelete("{id:int}", Name = ("DeleteViall"))]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -100,7 +101,7 @@ namespace MyAPI.Controllers
         [HttpPut("{id:int}", Name = ("UpdateViall"))]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<VillaDTO> UpdateViall(int id, [FromBody] VillaDTO villaDTOcs)
+        public ActionResult<VillaDTO> UpdateViall(int id, [FromBody] VillaUpdateDTO villaDTOcs)
         {
             if (id != villaDTOcs.Id || villaDTOcs == null)
                 return BadRequest();
@@ -125,7 +126,7 @@ namespace MyAPI.Controllers
         [HttpPatch("{id:int}", Name = ("UpdatePartialViall"))]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<VillaDTO> UpdatePartialViall(int id, JsonPatchDocument<VillaDTO> patchDTO)
+        public ActionResult<VillaDTO> UpdatePartialViall(int id, JsonPatchDocument<VillaUpdateDTO> patchDTO)
         {
             if (id == 0 || patchDTO == null)
                 return BadRequest();
@@ -133,8 +134,8 @@ namespace MyAPI.Controllers
               (x => x.Id == id);
             if (vaill == null)
                 return BadRequest();
-   
-            VillaDTO villaDTO = new()
+
+            VillaUpdateDTO villaDTO = new()
             {
                 Id = vaill.Id,
                 Name = vaill.Name,
