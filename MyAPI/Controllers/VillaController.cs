@@ -21,23 +21,23 @@ namespace MyAPI.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<IEnumerable<VillaDTO>> GetVialla()
+        public async Task<ActionResult<IEnumerable<VillaDTO>>> GetVialla()
         {
-            return Ok(_db.villas.ToList());
+            return Ok(await _db.villas.ToListAsync());
         }
 
         [HttpGet("{id:int}", Name = ("GetViall"))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<VillaDTO> GetViall(int id)
+        public async Task<ActionResult<VillaDTO>> GetViall(int id)
         {
 
             if (id == 0)
             {
                 return BadRequest();
             }
-            var vaill = _db.villas.FirstOrDefault
+            var vaill = await _db.villas.FirstOrDefaultAsync
                 (x => x.Id == id);
             if (vaill == null)
             {
@@ -51,13 +51,13 @@ namespace MyAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<VillaDTO> CrateViall([FromBody] VillaCreateDTO villaDTO)
+        public async Task<ActionResult<VillaDTO>> CrateViall([FromBody] VillaCreateDTO villaDTO)
         {
             if (villaDTO == null)
                 return BadRequest();
             //if (villaDTO.Id > 0)
             //    return StatusCode(StatusCodes.Status500InternalServerError);
-            if (_db.villas.FirstOrDefault(x => x.Name.ToLower() == villaDTO.Name.ToLower()) != null)
+            if (await _db.villas.FirstOrDefaultAsync(x => x.Name.ToLower() == villaDTO.Name.ToLower()) != null)
             {
                 ModelState.AddModelError("", "Vaill alredy exist");
                 return BadRequest(ModelState);
@@ -74,8 +74,8 @@ namespace MyAPI.Controllers
                 Sqft = villaDTO.Sqft
 
             };
-            _db.villas.Add(model);
-            _db.SaveChanges();
+            await _db.villas.AddAsync(model);
+            await _db.SaveChangesAsync();
             return CreatedAtRoute("GetViall", new { id = model.Id }, model);
           
         }
@@ -83,25 +83,25 @@ namespace MyAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<VillaDTO> DeleteViall(int id)
+        public async Task<ActionResult<VillaDTO>> DeleteViall(int id)
         {
             if (id == null)
                 return BadRequest();
-            var vaill = _db.villas.FirstOrDefault
+           var vaill = await _db.villas.FirstOrDefaultAsync
                (x => x.Id == id);
             if (vaill == null)
             {
                 return BadRequest();
             }
             _db.villas.Remove(vaill);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
             return NoContent();
 
         }
         [HttpPut("{id:int}", Name = ("UpdateViall"))]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<VillaDTO> UpdateViall(int id, [FromBody] VillaUpdateDTO villaDTOcs)
+        public async Task<ActionResult<VillaDTO>> UpdateViall(int id, [FromBody] VillaUpdateDTO villaDTOcs)
         {
             if (id != villaDTOcs.Id || villaDTOcs == null)
                 return BadRequest();
@@ -119,18 +119,18 @@ namespace MyAPI.Controllers
 
             };
             _db.villas.Update(model);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
             return Ok(villaDTOcs);
         }
 
         [HttpPatch("{id:int}", Name = ("UpdatePartialViall"))]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<VillaDTO> UpdatePartialViall(int id, JsonPatchDocument<VillaUpdateDTO> patchDTO)
+        public async Task<ActionResult<VillaDTO> >UpdatePartialViall(int id, JsonPatchDocument<VillaUpdateDTO> patchDTO)
         {
             if (id == 0 || patchDTO == null)
                 return BadRequest();
-            var vaill = _db.villas.AsNoTracking().FirstOrDefault
+            var vaill = await _db.villas.AsNoTracking().FirstOrDefaultAsync
               (x => x.Id == id);
             if (vaill == null)
                 return BadRequest();
@@ -161,7 +161,7 @@ namespace MyAPI.Controllers
 
             };
             _db.villas.Update(model);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
             return NoContent();
