@@ -1,4 +1,4 @@
-
+using MyAPI;
 using Microsoft.EntityFrameworkCore;
 using MyAPI.Data;
 
@@ -15,6 +15,7 @@ namespace MyAPI
 			{
 				option.UseSqlServer(builder.Configuration.GetConnectionString("MyConnection"));
 			});
+			builder.Services.AddAutoMapper(typeof(MappingConfig));
 			builder.Services.AddControllers(options=> {
 				//options.ReturnHttpNotAcceptable = true;
 			}).AddNewtonsoftJson().AddXmlDataContractSerializerFormatters();
