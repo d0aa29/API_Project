@@ -8,11 +8,16 @@ namespace MyAPI
     {
         public MappingConfig()
         {
-            CreateMap<VillaDTO, VillaCreateDTO>().ReverseMap();
-            CreateMap<VillaDTO, VillaUpdateDTO>().ReverseMap();
+            // Map between Villa and VillaDTO
+            CreateMap<Villa, VillaDTO>().ReverseMap();
 
+            // Map between Villa and VillaCreateDTO
             CreateMap<Villa, VillaCreateDTO>().ReverseMap();
+
+            // Map between Villa and VillaUpdateDTO
             CreateMap<Villa, VillaUpdateDTO>().ReverseMap();
+
+            
         }
     }
     
