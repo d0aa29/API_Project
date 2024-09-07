@@ -1,6 +1,8 @@
 using MyAPI;
 using Microsoft.EntityFrameworkCore;
 using MyAPI.Data;
+using MyAPI.Repository.IRepository;
+using MyAPI.Repository;
 
 namespace MyAPI
 {
@@ -15,6 +17,7 @@ namespace MyAPI
 			{
 				option.UseSqlServer(builder.Configuration.GetConnectionString("MyConnection"));
 			});
+			builder.Services.AddScoped<IVillaRepository,VillaRepository>();
 			builder.Services.AddAutoMapper(typeof(MappingConfig));
 			builder.Services.AddControllers(options=> {
 				//options.ReturnHttpNotAcceptable = true;
