@@ -18,7 +18,8 @@ namespace MyAPI
 				option.UseSqlServer(builder.Configuration.GetConnectionString("MyConnection"));
 			});
 			builder.Services.AddScoped<IVillaRepository,VillaRepository>();
-			builder.Services.AddAutoMapper(typeof(MappingConfig));
+            builder.Services.AddScoped<IVillaNumberRepository, VillaNumberRepository>();
+            builder.Services.AddAutoMapper(typeof(MappingConfig));
 			builder.Services.AddControllers(options=> {
 				//options.ReturnHttpNotAcceptable = true;
 			}).AddNewtonsoftJson().AddXmlDataContractSerializerFormatters();
