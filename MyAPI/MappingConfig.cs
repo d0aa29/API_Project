@@ -17,7 +17,16 @@ namespace MyAPI
             // Map between Villa and VillaUpdateDTO
             CreateMap<Villa, VillaUpdateDTO>().ReverseMap();
 
-            
+            // Map between VillaNumber and VillaNumberDTO
+            CreateMap<VillaNumber, VillaNumberDTO>().ReverseMap();
+
+            // Map between VillaNumber and VillaNumberCreateDTO
+            CreateMap<VillaNumber, VillaNumberCreateDTO>().ReverseMap();
+
+            // Map between VillaNumber and VillaNumberUpdateDTO
+            CreateMap<VillaNumber, VillaNumberUpdateDTO>().ReverseMap();
+
+
         }
     }
     
