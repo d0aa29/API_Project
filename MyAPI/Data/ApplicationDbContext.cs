@@ -10,6 +10,7 @@ namespace MyAPI.Data
           : base(options) {
         }
         public DbSet<Villa> villas { get; set; }
+        public DbSet<LocalUser> LocalUsers { get; set; }
         public DbSet<VillaNumber> villaNumbers { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
