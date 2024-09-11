@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MyAPI
 {
@@ -76,8 +77,12 @@ namespace MyAPI
              
 
             });
-             
 
+            builder.Services.AddApiVersioning(options =>
+            {
+                options.AssumeDefaultVersionWhenUnspecified=true;
+                options.DefaultApiVersion = new ApiVersion(1, 0);
+            });
 
             var key = builder.Configuration.GetValue<string>("JWT:Secret");
 
