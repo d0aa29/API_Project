@@ -32,6 +32,8 @@ namespace MyAPI.Controllers
 
         [Authorize]
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<APIResponse>> GetVialla()
         {
@@ -49,6 +51,8 @@ namespace MyAPI.Controllers
             return _response;
         }
         [Authorize(Roles ="Admin")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [HttpGet("{id:int}", Name = ("GetViall"))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -119,6 +123,8 @@ namespace MyAPI.Controllers
 
         [Authorize(Roles = "Customer")]
         [HttpDelete("{id:int}", Name = ("DeleteViall"))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
