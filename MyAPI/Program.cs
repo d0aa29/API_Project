@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.OpenApi.Models;
 
 namespace MyAPI
 {
@@ -39,7 +40,43 @@ namespace MyAPI
 			}).AddNewtonsoftJson().AddXmlDataContractSerializerFormatters();
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
-			builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(options =>
+            {
+                //the add security definition basically describes how the API is protected through the generated swagger.
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description =
+                        "JWT Authorization header using the Bearer scheme. \r\n\r\n " +
+                        "Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\n" +
+                        "Example: \"Bearer 12345abcdef\"",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Scheme = "Bearer"
+                });
+
+                //But next, we have to add the security requirement, and that will be a global security requirement.
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                                        {
+                                            Type = ReferenceType.SecurityScheme,
+                                            Id = "Bearer"
+                                        },
+                            Scheme = "oauth2",
+                            Name = "Bearer",
+                            In = ParameterLocation.Header
+                        },
+                        new List<string>()
+                    }
+                });
+
+             
+
+            });
+             
 
 
             var key = builder.Configuration.GetValue<string>("JWT:Secret");
