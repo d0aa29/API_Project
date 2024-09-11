@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using MyAPI.Data;
 using MyAPI.Repository.IRepository;
 using MyAPI.Repository;
+using Microsoft.AspNetCore.Identity;
+using MyAPI.Models;
 
 namespace MyAPI
 {
@@ -19,9 +21,14 @@ namespace MyAPI
 			});
 			builder.Services.AddScoped<IVillaRepository,VillaRepository>();
             builder.Services.AddScoped<IVillaNumberRepository, VillaNumberRepository>();
+			builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()  // Add this line to configure the user and role stores.
               .AddDefaultTokenProviders();
+            //object value = builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+            //      //.AddEntityFrameworkStores<ApplicationDbContext>()
+            //      .AddEntityFrameworkStores<ApplicationDbContext>()  // Add this line to configure the user and role stores.
+            //       .AddDefaultTokenProviders();
             builder.Services.AddAutoMapper(typeof(MappingConfig));
 			builder.Services.AddControllers(options=> {
 				//options.ReturnHttpNotAcceptable = true;
