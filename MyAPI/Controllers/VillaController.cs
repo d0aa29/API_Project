@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using MyAPI.Repository.IRepository;
 using System.Net;
 using Azure;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MyAPI.Controllers
 {
@@ -29,6 +30,7 @@ namespace MyAPI.Controllers
             this._response = new ();
         }
 
+        [Authorize]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<APIResponse>> GetVialla()
@@ -46,7 +48,7 @@ namespace MyAPI.Controllers
             }
             return _response;
         }
-
+        [Authorize(Roles ="Admin")]
         [HttpGet("{id:int}", Name = ("GetViall"))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -110,12 +112,12 @@ namespace MyAPI.Controllers
             }
             return _response;
         }
-       
-        
-        
-        
-        
-        
+
+
+
+
+
+        [Authorize(Roles = "Customer")]
         [HttpDelete("{id:int}", Name = ("DeleteViall"))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
