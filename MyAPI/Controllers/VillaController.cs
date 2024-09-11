@@ -14,7 +14,8 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace MyAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/Villa")]
+    [ApiVersion("1.0")]
     [ApiController]
     public class VillaController : ControllerBase
     {

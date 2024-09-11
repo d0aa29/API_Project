@@ -13,7 +13,9 @@ using Azure;
 
 namespace MyAPI.Controllers
 {
-    [Route("api/VillaNumber")]
+   // [Route("api/VillaNumber")]
+    [Route("api/v{version:apiVersion}/VillaNumber")]
+    [ApiVersion("1.0")]
     [ApiController]
     public class VillaNumberController : ControllerBase
     {

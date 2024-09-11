@@ -82,6 +82,11 @@ namespace MyAPI
             {
                 options.AssumeDefaultVersionWhenUnspecified=true;
                 options.DefaultApiVersion = new ApiVersion(1, 0);
+                options.ReportApiVersions=true;
+            });
+            builder.Services.AddVersionedApiExplorer(options => {
+                options.GroupNameFormat = "'v'VVV";
+                options.SubstituteApiVersionInUrl=true; 
             });
 
             var key = builder.Configuration.GetValue<string>("JWT:Secret");
