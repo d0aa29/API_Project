@@ -25,7 +25,8 @@ namespace MyAPI.Repository
             await Save();
         }
 
-        public async Task<T> Get(Expression<Func<T, bool>> filter = null, bool tracked = true)
+        public async Task<T> Get(Expression<Func<T, bool>> filter = null, bool tracked = true,
+            string? includProperties = null)
         {
             IQueryable<T> query = dbSet;
             if (!tracked)
@@ -36,16 +37,43 @@ namespace MyAPI.Repository
             {
                 query = query.Where(filter);
             }
+            if (includProperties != null)
+            {
+                foreach (var includeProp in includProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProp);
+                }
+            }
             return await query.FirstOrDefaultAsync();
         }
 
-        public async Task<List<T>> GetAll(Expression<Func<T, bool>>? filter = null)
+        public async Task<List<T>> GetAll(Expression<Func<T, bool>>? filter = null,
+            string? includProperties = null,
+            int pageSize = 3, int pageNum = 1)
         {
             IQueryable<T> query = dbSet;
 
             if (filter != null)
             {
                 query = query.Where(filter);
+            }
+            if (pageSize > 0)
+            {
+                if (pageSize > 100)
+                {
+                    pageSize = 100;
+                }
+                //skip0.take(5)
+                //page number- 2     || page size -5
+                //skip(5*(1)) take(5)
+                query = query.Skip(pageSize * (pageNum - 1)).Take(pageSize);
+            }
+            if (includProperties != null)
+            {
+                foreach (var includeProp in includProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProp);
+                }
             }
             return await query.ToListAsync();
         }

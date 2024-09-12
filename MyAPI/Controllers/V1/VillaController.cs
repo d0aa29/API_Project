@@ -38,18 +38,20 @@ namespace MyAPI.Controllers.V1
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<APIResponse>> GetVialls(
-            [FromQuery(Name = "filterOccupancy")] int? occupancy, [FromQuery] string? search)
+            [FromQuery(Name = "filterOccupancy")] int? occupancy, [FromQuery] string? search,
+            int pageSize = 2, int pageNum = 1)
         {
             try
             {
                 IEnumerable<Villa> villaList;
                 if (occupancy >=0 )
                 {
-                    villaList= await _dbvilla.GetAll(u=>u.Occupancy==occupancy);
+                    villaList = await _dbvilla.GetAll(u => u.Occupancy == occupancy,
+                   pageSize: pageSize, pageNum: pageNum);
 
                 }
                 else
-                villaList = await _dbvilla.GetAll();
+                villaList = await _dbvilla.GetAll(pageSize: pageSize, pageNum: pageNum);
 
                 if (!string.IsNullOrEmpty(search))
                 {
