@@ -7,7 +7,7 @@ using MyAPI.Repository.IRepository;
 namespace MyAPI.Controllers
 {
     [Route("api/v{version:apiVersion}/Users")]
-    [ApiVersion("1.0")]
+    [ApiVersionNeutral]
    // [Route("api/Users")]
     [ApiController]
     public class UsersController : ControllerBase

@@ -12,23 +12,23 @@ using System.Net;
 using Azure;
 using Microsoft.AspNetCore.Authorization;
 
-namespace MyAPI.Controllers
+namespace MyAPI.Controllers.V1
 {
     [Route("api/v{version:apiVersion}/Villa")]
     [ApiVersion("1.0")]
     [ApiController]
     public class VillaController : ControllerBase
     {
-       // private ApplicationDbContext _db;
+        // private ApplicationDbContext _db;
         private readonly IVillaRepository _dbvilla;
         private readonly IMapper _mapper;
         private APIResponse _response;
         public VillaController(IVillaRepository dbvilla, IMapper mapper)
         {
-        
+
             _dbvilla = dbvilla;
-             _mapper = mapper;
-            this._response = new ();
+            _mapper = mapper;
+            _response = new();
         }
 
         [Authorize]
@@ -45,36 +45,38 @@ namespace MyAPI.Controllers
                 _response.StatusCode = HttpStatusCode.OK;
                 return Ok(_response);
             }
-            catch (Exception ex) { 
+            catch (Exception ex)
+            {
                 _response.IsSuccess = false;
-                _response.ErrorMessages=new List<string>() { ex.ToString()};
+                _response.ErrorMessages = new List<string>() { ex.ToString() };
             }
             return _response;
         }
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [HttpGet("{id:int}", Name = ("GetViall"))]
+        [HttpGet("{id:int}", Name = "GetViall")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<APIResponse>> GetViall(int id)
         {
-            try { 
-            if (id == 0)
+            try
             {
+                if (id == 0)
+                {
                     _response.StatusCode = HttpStatusCode.BadRequest;
                     return BadRequest(_response);
-            }
-            var villa = await _dbvilla.Get(x => x.Id == id);
-            if (villa == null)
+                }
+                var villa = await _dbvilla.Get(x => x.Id == id);
+                if (villa == null)
                 {
                     _response.StatusCode = HttpStatusCode.NotFound;
                     return NotFound(_response);
                 }
-            _response.Result = _mapper.Map<VillaDTO>(villa);
-            _response.StatusCode = HttpStatusCode.OK;
-            return Ok(_response);
+                _response.Result = _mapper.Map<VillaDTO>(villa);
+                _response.StatusCode = HttpStatusCode.OK;
+                return Ok(_response);
             }
             catch (Exception ex)
             {
@@ -91,24 +93,25 @@ namespace MyAPI.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<APIResponse>> CreateViall([FromBody] VillaCreateDTO villaDTO)
         {
-            try { 
-            if (villaDTO == null)
-                return BadRequest();
-           
-            if (await _dbvilla.Get(x => x.Name.ToLower() == villaDTO.Name.ToLower()) != null)
+            try
             {
-                ModelState.AddModelError("", "Vaill alredy exist");
-                return BadRequest(ModelState);
-            }
-           
-            Villa villa = _mapper.Map<Villa>(villaDTO);
+                if (villaDTO == null)
+                    return BadRequest();
 
-            await _dbvilla.Create(villa);
-            // await _dbvilla.Save();
-            _response.Result = _mapper.Map<VillaDTO>(villa);
-            _response.StatusCode = HttpStatusCode.OK;
-          //  return Ok(_response);
-            return CreatedAtRoute("GetViall", new { id = villa.Id }, _response);
+                if (await _dbvilla.Get(x => x.Name.ToLower() == villaDTO.Name.ToLower()) != null)
+                {
+                    ModelState.AddModelError("", "Vaill alredy exist");
+                    return BadRequest(ModelState);
+                }
+
+                Villa villa = _mapper.Map<Villa>(villaDTO);
+
+                await _dbvilla.Create(villa);
+                // await _dbvilla.Save();
+                _response.Result = _mapper.Map<VillaDTO>(villa);
+                _response.StatusCode = HttpStatusCode.OK;
+                //  return Ok(_response);
+                return CreatedAtRoute("GetViall", new { id = villa.Id }, _response);
             }
             catch (Exception ex)
             {
@@ -123,7 +126,7 @@ namespace MyAPI.Controllers
 
 
         [Authorize(Roles = "Customer")]
-        [HttpDelete("{id:int}", Name = ("DeleteViall"))]
+        [HttpDelete("{id:int}", Name = "DeleteViall")]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -131,19 +134,20 @@ namespace MyAPI.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<APIResponse>> DeleteViall(int id)
         {
-            try { 
-            if (id == null)
-                return BadRequest();
-           var vaill = await _dbvilla.Get
-               (x => x.Id == id);
-            if (vaill == null)
+            try
             {
-                return BadRequest();
-            }
-            await _dbvilla.Remove(vaill);
-            _response.StatusCode = HttpStatusCode.NoContent;
-            _response.IsSuccess = true;
-            return Ok(_response);
+                if (id == null)
+                    return BadRequest();
+                var vaill = await _dbvilla.Get
+                    (x => x.Id == id);
+                if (vaill == null)
+                {
+                    return BadRequest();
+                }
+                await _dbvilla.Remove(vaill);
+                _response.StatusCode = HttpStatusCode.NoContent;
+                _response.IsSuccess = true;
+                return Ok(_response);
             }
             catch (Exception ex)
             {
@@ -152,25 +156,26 @@ namespace MyAPI.Controllers
             }
             return _response;
         }
-        [HttpPut("{id:int}", Name = ("UpdateViall"))]
+        [HttpPut("{id:int}", Name = "UpdateViall")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<APIResponse>> UpdateViall(int id, [FromBody] VillaUpdateDTO villaDTOcs)
         {
-            try { 
-            if (id != villaDTOcs.Id || villaDTOcs == null)
-                return BadRequest();
+            try
+            {
+                if (id != villaDTOcs.Id || villaDTOcs == null)
+                    return BadRequest();
 
-      
-            Villa model = _mapper.Map<Villa>(villaDTOcs);
 
-          
-            await _dbvilla.Update(model);
+                Villa model = _mapper.Map<Villa>(villaDTOcs);
 
-          //  _response.Result = _mapper.Map<VillaDTO>(model);
-            _response.StatusCode = HttpStatusCode.NoContent;
-            _response.IsSuccess = true;
-            return Ok(_response);
+
+                await _dbvilla.Update(model);
+
+                //  _response.Result = _mapper.Map<VillaDTO>(model);
+                _response.StatusCode = HttpStatusCode.NoContent;
+                _response.IsSuccess = true;
+                return Ok(_response);
             }
             catch (Exception ex)
             {
@@ -180,26 +185,26 @@ namespace MyAPI.Controllers
             return _response;
         }
 
-        [HttpPatch("{id:int}", Name = ("UpdatePartialViall"))]
+        [HttpPatch("{id:int}", Name = "UpdatePartialViall")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<APIResponse> >UpdatePartialViall(int id, JsonPatchDocument<VillaUpdateDTO> patchDTO)
+        public async Task<ActionResult<APIResponse>> UpdatePartialViall(int id, JsonPatchDocument<VillaUpdateDTO> patchDTO)
         {
             if (id == 0 || patchDTO == null)
                 return BadRequest();
             var vaill = await _dbvilla.Get
-              (x => x.Id == id,tracked:false);
+              (x => x.Id == id, tracked: false);
             if (vaill == null)
                 return BadRequest();
 
             VillaUpdateDTO villaDTO = _mapper.Map<VillaUpdateDTO>(vaill);
 
-            patchDTO.ApplyTo(villaDTO , ModelState);
-          
+            patchDTO.ApplyTo(villaDTO, ModelState);
+
             Villa model = _mapper.Map<Villa>(villaDTO);
 
             _dbvilla.Update(model);
-       
+
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
             return NoContent();
