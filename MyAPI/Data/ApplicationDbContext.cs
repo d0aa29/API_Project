@@ -1,14 +1,17 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿ using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using MyAPI.Models;
 
 namespace MyAPI.Data
 {
-    public class ApplicationDbContext:DbContext
+    public class ApplicationDbContext: IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) 
             
           : base(options) {
         }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<Villa> villas { get; set; }
         public DbSet<LocalUser> LocalUsers { get; set; }
         public DbSet<VillaNumber> villaNumbers { get; set; }

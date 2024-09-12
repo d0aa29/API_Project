@@ -29,6 +29,7 @@ namespace MyAPI
 			builder.Services.AddScoped<IVillaRepository,VillaRepository>();
             builder.Services.AddScoped<IVillaNumberRepository, VillaNumberRepository>();
 			builder.Services.AddScoped<IUserRepository, UserRepository>();
+
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()  // Add this line to configure the user and role stores.
               .AddDefaultTokenProviders();

@@ -7,7 +7,7 @@ namespace MyAPI.Repository.IRepository
     {
         Task<List<T>> GetAll(Expression<Func<T, bool>>? fillter = null,
             string? includProperties=null,
-            int pageSize=3,int pageNum = 1);
+            int pageSize=0,int pageNum = 1);
 
         Task<T> Get(Expression<Func<T, bool>> fillter = null, bool tracked = true,
             string? includProperties = null);

@@ -40,7 +40,7 @@ namespace MyAPI.Controllers.V1
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<APIResponse>> GetVialls(
             [FromQuery(Name = "filterOccupancy")] int? occupancy, [FromQuery] string? search,
-            int pageSize = 2, int pageNum = 1)
+            int pageSize = 0, int pageNum = 1)
         {
             try
             {
