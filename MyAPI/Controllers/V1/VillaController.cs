@@ -37,7 +37,8 @@ namespace MyAPI.Controllers.V1
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<APIResponse>> GetVialls([FromQuery(Name = "filterOccupancy")] int? occupancy)
+        public async Task<ActionResult<APIResponse>> GetVialls(
+            [FromQuery(Name = "filterOccupancy")] int? occupancy, [FromQuery] string? search)
         {
             try
             {
@@ -50,6 +51,10 @@ namespace MyAPI.Controllers.V1
                 else
                 villaList = await _dbvilla.GetAll();
 
+                if (!string.IsNullOrEmpty(search))
+                {
+                    villaList= villaList.Where(u=>u.Name.ToLower().Contains(search));
+                }
                 _response.Result = _mapper.Map<List<VillaDTO>>(villaList);
                 _response.StatusCode = HttpStatusCode.OK;
                 return Ok(_response);
