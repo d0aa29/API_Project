@@ -33,10 +33,11 @@ namespace MyAPI.Controllers.V1
 
         [Authorize]
         [HttpGet]
+        [ResponseCache(CacheProfileName= "Defult30")]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<APIResponse>> GetVialla()
+        public async Task<ActionResult<APIResponse>> GetVialls()
         {
             try
             {

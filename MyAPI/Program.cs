@@ -25,6 +25,7 @@ namespace MyAPI
 			{
 				option.UseSqlServer(builder.Configuration.GetConnectionString("MyConnection"));
 			});
+            builder.Services.AddResponseCaching();
 			builder.Services.AddScoped<IVillaRepository,VillaRepository>();
             builder.Services.AddScoped<IVillaNumberRepository, VillaNumberRepository>();
 			builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -37,6 +38,11 @@ namespace MyAPI
             //       .AddDefaultTokenProviders();
             builder.Services.AddAutoMapper(typeof(MappingConfig));
 			builder.Services.AddControllers(options=> {
+                options.CacheProfiles.Add("Defult30",
+                    new CacheProfile()
+                    {
+                        Duration = 30
+                    });
 				//options.ReturnHttpNotAcceptable = true;
 			}).AddNewtonsoftJson().AddXmlDataContractSerializerFormatters();
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
