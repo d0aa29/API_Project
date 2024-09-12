@@ -11,6 +11,7 @@ using MyAPI.Repository.IRepository;
 using System.Net;
 using Azure;
 using Microsoft.AspNetCore.Authorization;
+using System.Text.Json;
 
 namespace MyAPI.Controllers.V1
 {
@@ -31,7 +32,7 @@ namespace MyAPI.Controllers.V1
             _response = new();
         }
 
-        [Authorize]
+       [Authorize]
         [HttpGet]
         [ResponseCache(CacheProfileName= "Defult30")]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -57,6 +58,9 @@ namespace MyAPI.Controllers.V1
                 {
                     villaList= villaList.Where(u=>u.Name.ToLower().Contains(search));
                 }
+                Pagination pagination = new() { PageNumber = pageNum, PageSize = pageSize };
+
+                Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(pagination));
                 _response.Result = _mapper.Map<List<VillaDTO>>(villaList);
                 _response.StatusCode = HttpStatusCode.OK;
                 return Ok(_response);
