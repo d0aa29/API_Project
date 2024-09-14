@@ -26,6 +26,8 @@ namespace MyAPI
             // Map between VillaNumber and VillaNumberUpdateDTO
             CreateMap<VillaNumber, VillaNumberUpdateDTO>().ReverseMap();
 
+            CreateMap<ApplicationUser, UserDTO>().ReverseMap();
+
 
         }
     }
