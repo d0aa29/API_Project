@@ -10,7 +10,7 @@ namespace MyAPI.Repository
     public class Repository<T> : IRepository<T> where T : class
     {
         private ApplicationDbContext _db;
-        private readonly IMapper _mapper;
+      
         internal DbSet<T> dbSet { get; set; }
         public Repository(ApplicationDbContext db)
         {
